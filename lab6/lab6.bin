@@ -1,0 +1,36 @@
+
+;Name: Hanxiao Lu Date: 11/14/2017 
+;This code is to calculate the sum of positive numbers in a set of ten integers.
+;This purpose could be acheived is through extracting every content of memory address we are interested in.
+;Then judge whether each of them is positive and negative.
+;Finally adding positive integers together and get the result.
+
+
+;R2 is used to read content of memory address we are interested in.
+;R3 is used  as a pointer to point to the location of the numbers in memory that are being analyzed,
+;starting from address x3132.
+;R4 is used as a counter to judge whether the whole process is over.
+;R5 is the destination register storing the result of positive integer addition. 
+
+
+
+0011 0001 0000 0000 ; x3100 - starting address of the program
+
+; The program description and code starts here
+
+
+0101 011 011 1 00000; x3101 - R3 <- 0                 clearing the R3 to 0
+0101 100 100 1 00000; x3102 - R4 <- 0                 clearing the R4 to 0
+0001 100 100 1 01010; x3103 - R4 <- R4+10             adding 10 to R4 as counter
+0101 101 101 1 00000; x3104 - R5 <- 0                 clearing the R5 to 0 
+1110 011 000101101  ; x3105 - R3 <- MAR[x3132]        put the first memory address x3132 to R3
+0101 010 010 1 00000; x3106 - R2 <- 0                 clearing the R2 to 0
+0110 010 011 000000 ; x3107 - R2 <- M[R3]             read the content of memory address and put it in R2
+0000 100 000000001  ; x3108 - pc=x310A <- if R2<0     if R2 is negative, then go to the state pc=x310A
+0001 101 010 000 101; x3109 - R5 <- R2+R5             if R2 is positive, then add R2 with R5 and store in R5
+0101 010 010 1 00000; x310A - R2 <- 0                 clearing R2 again 
+0001 011 011 1 00001; x310B - R3 <- R3+1              increment R3 with 1
+0001 100 100 1 11111; x310C - R4 <- R4-1              decreasing R4 by 1
+0000 010 000000001  ; x310D - pc=x3110 <- if R4=0     if counter R4 is zero, go to state pc=x3110
+0100 1 11111111000  ; x310E - pc=x3107 <- if R4!=0    jump to state  pc=x3107 
+1111 0000 0010 0101 ; x3110 - halt
